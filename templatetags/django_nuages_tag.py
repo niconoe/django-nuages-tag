@@ -6,12 +6,8 @@ from django import template
 
 register = template.Library()
 
-# TODO: Extract in a specific app
-# TODO: Write tests
-# Create python package
 # TODO: PEP-8
 # TODO: update doc (incorrect now)
-# TODO Improve tag so it works with both QuerySets (ok now) and list of dict (not ok now)
 
 @register.tag
 def compute_tag_cloud(parser, token):
@@ -66,6 +62,8 @@ def compute_tag_cloud(parser, token):
             
     (tag_name, data, count_property, new_property, min_size, max_size, 
     mode) = bits 
+    
+    # TODO: Check mode is 'log' or 'lin'
     
     return TagCloudNode(data, count_property, new_property, min_size, max_size, mode)
     
