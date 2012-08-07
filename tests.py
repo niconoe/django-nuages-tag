@@ -1,13 +1,50 @@
+from django.db import models
 from django.utils import unittest
 from django.template import Template, Context, TemplateSyntaxError
+
+# This model is usedul only for testing
+class Article(models.Model):
+    title = models.CharField(max_length=128)
+    count_attribute = models.IntegerField()
+    
+    # This will be used to test that the 'count' parameter can be either an attribute or a method to call
+    def count_method(self):
+        return self.value_attribute * 2
 
 class TemplateTagsTestCase(unittest.TestCase):
     
     # Run before each test
     def setUp(self):
+        # Create a dict (will be used as a datasource)
         self.TEST_DATA_DICT = [{'name': 'Python', 'interest': 30},
                           {'name': 'Django', 'interest': 70},
-                          {'name': 'PHP', 'interest': 6}]               
+                          {'name': 'PHP', 'interest': 6}]
+        
+        # Create a few Articles (another datasource)
+        Article.objects.all().delete()
+        Article.objects.create(title="Anthribidae", count_attribute=3)
+        Article.objects.create(title="Brentidae", count_attribute=3)
+        Article.objects.create(title="Buprestidae", count_attribute=290)
+        Article.objects.create(title="Carabidae", count_attribute=151)
+        Article.objects.create(title="Cerambycidae", count_attribute=967)                                
+
+    # We use a QuerySet as a datasource (instead of simple List)
+    def test_with_queryset(self):
+        all_articles = Article.objects.order_by('title')
+        
+        t = Template('{% load django_nuages_tag %}'
+                     '{% compute_tag_cloud articles count_attribute font_size 10 55 log %}')             
+                     
+        c = Context({'articles': all_articles})
+        t.render(c)
+        
+        # We check an attribute has been added (and its value!)
+        self.assertAlmostEqual(c['articles'][0].font_size, 17.1917552312)
+        self.assertAlmostEqual(c['articles'][1].font_size, 17.1917552312)
+        self.assertAlmostEqual(c['articles'][2].font_size, 47.1162749669)
+        self.assertAlmostEqual(c['articles'][3].font_size, 42.8442061727)
+        self.assertAlmostEqual(c['articles'][4].font_size, 55)
+        
 
     # Test the tag complains if we don't provide the mandatory arguments.
     def test_compute_tag_cloud_requires_arguments(self):
@@ -53,15 +90,12 @@ class TemplateTagsTestCase(unittest.TestCase):
         self.assertAlmostEqual(self.TEST_DATA_DICT[1]['font-size'], 100) # Django
         self.assertAlmostEqual(self.TEST_DATA_DICT[2]['font-size'], 47.9565806346) # PHP    
     
-    # TODO: test idem with the log formula
     
     # TODO: test that the bounds (10-100) are taken into account... hmm only for lin ? is it normal ?
                     
             
     # TODO: Test working with a queryset
-    # TODO: test working with simple lists/dicts
-    # TODO: test result of lin formula
-    # TODO: test results of log formula
+
     # TODO: test multiple run with different variables
     # TODO: test "count" can be an attribute or a function                     
         
