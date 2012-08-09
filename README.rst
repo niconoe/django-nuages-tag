@@ -10,9 +10,13 @@ Tiny tutorial
 Install the app in your Django project
 --------------------------------------
 
-This should be as simple as copying the ‘django\_nuages\_tag’ directory
-in your project and adding ‘django\_nuages\_tag’ to your
-``INSTALLED_APPS`` settings. Pip deployment will be available soon.
+This should be as simple as 
+
+::
+
+    pip install django-nuages-tag
+
+ and adding ‘django\_nuages\_tag’ to your ``INSTALLED_APPS`` settings.
 
 Example usage
 -------------
