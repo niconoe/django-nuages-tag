@@ -17,8 +17,8 @@ class TemplateTagsTestCase(unittest.TestCase):
     def setUp(self):
         # Create a dict (will be used as a datasource)
         self.TEST_DATA_DICT = [{'name': 'Python', 'interest': 30},
-                          {'name': 'Django', 'interest': 70},
-                          {'name': 'PHP', 'interest': 6}]
+                               {'name': 'Django', 'interest': 70},
+                               {'name': 'PHP', 'interest': 6}]
         
         # Create a few Articles (another datasource)
         Article.objects.all().delete()

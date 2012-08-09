@@ -11,48 +11,6 @@ register = template.Library()
 
 @register.tag
 def compute_tag_cloud(parser, token):
-    """
-    Simple helper to allow generation of tag clouds.
-    
-    Usage:
-    
-    {% simple_tag_cloud queryset count_attribute min_size max_size mode %}
-    
-    For each element (model instance) in queryset, this tag will add a 
-    'tag_size' attribute.
-    
-    The value of tag_size will be in the min_size...max_size range and will 
-    reflect the value of the 'count_attribute' attribute of the instance.
-    
-    Mode should be set to "lin" or "log".
-    
-    Example:
-    
-    {% simple_tag_cloud families count_pictures 15 80 log %}
-    
-    => each element in families (a QuerySet) will gain a tag_size attribute. 
-    This tag size will be proportional to a_family.count_pictures and will 
-    be >= 15 and <= 80.
-    
-    The typical usage will then be:
-    
-    {% for family in families %}
-        <a style="font-size: {{ family.tag_size }}px;" 
-        href="{% url family.get_full_path %}">{{ family.name }}</a> 
-    {% endfor %}
-    
-    NOTE: This currently only works with querysets.
-    NOTE: the count_attribute parameter should be the name of a property 
-    (NOT a method!) of the instance. This can be, for example, created 
-    with the @property decorator.
-    
-    Example (in models.py:)
-    
-    @property
-    def count_pictures(self):
-        return len(self.picture_set.all())
-    
-    """
     bits = token.split_contents()
     
     if len(bits) != 7:
@@ -85,7 +43,6 @@ class TagCloudNode(template.Node):
         data = self.data.resolve(context)
         smallest_count, largest_count = find_min_max(data, self.count_property)
            
-        results = []
         for tag in data:
             current_count = get_attribute_or_key(tag, self.count_property)
             size = self.calculate(current_count, smallest_count, largest_count, 
@@ -125,7 +82,7 @@ def set_attribute_or_key(obj, property_name, property_value):
         obj[property_name] = property_value
 
 def find_min_max(container, count_property):
-    """ Returns a tuple containing the min. and max. values of the 'count_property' property of each element of the container """
+    """ Returns a tuple containing the min. and max. values of the 'count_property' attribute/key of each element of container. """
     smallest_count = get_attribute_or_key(container[0], count_property)
     largest_count = get_attribute_or_key(container[0], count_property)
     
