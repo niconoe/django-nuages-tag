@@ -6,9 +6,6 @@ from django import template
 
 register = template.Library()
 
-# TODO: PEP-8
-# TODO: update doc (incorrect now)
-
 @register.tag
 def compute_tag_cloud(parser, token):
     bits = token.split_contents()
