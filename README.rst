@@ -16,7 +16,7 @@ This should be as simple as
 
     pip install django-nuages-tag
 
- and adding ‘django\_nuages\_tag’ to your ``INSTALLED_APPS`` settings.
+and adding ‘django\_nuages\_tag’ to your ``INSTALLED_APPS`` settings.
 
 Example usage
 -------------
@@ -91,3 +91,5 @@ Notes
        {% for tool in my_favourite_tools %}
          <span style="font-size: {{ tool.font_size }}px; margin: {{ tool.margin }}px; opacity: {{ tool.opacity }}">{{ tool.name }}</span>
        {% endfor %}
+       
+- The ``counter`` parameter (``interest`` in our example) can be an attribute, a method to be called or a dictionary key.       
