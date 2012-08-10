@@ -4,7 +4,7 @@ from setuptools import find_packages
 
 setup(
     name='django-nuages-tag',
-    version='0.1.0',
+    version='0.1.1',
     author=u'Nicolas Noé',
     author_email='nicolas@niconoe.eu',
     packages=find_packages(),
