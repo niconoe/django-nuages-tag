@@ -20,6 +20,15 @@ class TemplateTagsTestCase(unittest.TestCase):
                                {'name': 'Django', 'interest': 70},
                                {'name': 'PHP', 'interest': 6}]
         
+        # Idem, but one of the tag has the '0' value                       
+        self.TEST_DATA_DICT_ZERO = [{'name': 'Python', 'interest': 30},
+                                    {'name': 'Django', 'interest': 70},
+                                    {'name': 'PHP', 'interest': 0}]
+        
+        self.TEST_DATA_DICT_NEG = [{'name': 'Python', 'interest': 30},
+                                    {'name': 'Django', 'interest': 70},
+                                    {'name': 'PHP', 'interest': -1.5}]                                              
+        
         # Create a few Articles (another datasource)
         Article.objects.all().delete()
         Article.objects.create(title="Anthribidae", count_attribute=3)
@@ -108,6 +117,43 @@ class TemplateTagsTestCase(unittest.TestCase):
         self.assertAlmostEqual(self.TEST_DATA_DICT[1]['font-size'], 100) # Django
         self.assertAlmostEqual(self.TEST_DATA_DICT[2]['font-size'], 47.9565806346) # PHP    
     
+    # Next 4 tests: 0 (or less) should have size 0
+    def test_with_zero_log(self):
+        t = Template('{% load django_nuages_tag %}'
+                     '{% compute_tag_cloud my_test_data interest font-size 10 100 log %}')             
+
+        c = Context({'my_test_data': self.TEST_DATA_DICT_ZERO})
+        t.render(c)
+        
+        self.assertAlmostEqual(self.TEST_DATA_DICT_ZERO[2]['font-size'], 0) # PHP
+    
+    def test_with_zero_lin(self):
+        t = Template('{% load django_nuages_tag %}'
+                     '{% compute_tag_cloud my_test_data interest font-size 10 100 lin %}')             
+
+        c = Context({'my_test_data': self.TEST_DATA_DICT_ZERO})
+        t.render(c)
+
+        self.assertAlmostEqual(self.TEST_DATA_DICT_ZERO[2]['font-size'], 0) # PHP     
+    
+    def test_with_neg_log(self):
+        t = Template('{% load django_nuages_tag %}'
+                     '{% compute_tag_cloud my_test_data interest font-size 10 100 log %}')             
+
+        c = Context({'my_test_data': self.TEST_DATA_DICT_NEG})
+        t.render(c)
+
+        self.assertAlmostEqual(self.TEST_DATA_DICT_NEG[2]['font-size'], 0) # PHP
+
+    def test_with_neg_lin(self):
+        t = Template('{% load django_nuages_tag %}'
+                         '{% compute_tag_cloud my_test_data interest font-size 10 100 lin %}')             
+
+        c = Context({'my_test_data': self.TEST_DATA_DICT_NEG})
+        t.render(c)
+
+        self.assertAlmostEqual(self.TEST_DATA_DICT_NEG[2]['font-size'], 0) # PHP
+        
     
     # TODO: test that the bounds (10-100) are taken into account... hmm only for lin ? is it normal ?
                     

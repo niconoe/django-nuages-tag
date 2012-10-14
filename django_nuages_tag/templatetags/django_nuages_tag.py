@@ -42,8 +42,12 @@ class TagCloudNode(template.Node):
            
         for tag in data:
             current_count = get_attribute_or_method_or_key(tag, self.count_property)
-            size = self.calculate(current_count, smallest_count, largest_count, 
-                                  self.max_size, self.min_size)
+            
+            if current_count <= 0:
+                size = 0
+            else:
+                size = self.calculate(current_count, smallest_count, largest_count, 
+                                      self.max_size, self.min_size)
             set_attribute_or_key(tag, self.new_property, size)
             
         return '' # Template tags should always returns a string.    
