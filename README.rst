@@ -52,7 +52,7 @@ representative of the value of ``interest``. The last parameter
 Another option is to use a logarithmic formula (use the ``log``
 parameter). You should test both options, but ``log`` will probably give
 you better results if there is a large variation in the values you want
-to compute.
+to compute. NOTE: 0 and negative values will be computed to 0 (with both formulas).
 
 Our source data now looks like:
 
