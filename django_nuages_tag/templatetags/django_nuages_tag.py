@@ -57,9 +57,13 @@ class TagCloudNode(template.Node):
 def calculate_lin(current_count, smallest_count, largest_count, max_size, min_size):
     """ Calculate ratio (linear version). """
     
-    # Formula details: 
-    # http://blog.16codes.com/2007/12/how-to-create-tag-cloud-with-formula.html
-    return ( ((current_count-smallest_count) * (max_size-min_size)) / (largest_count
+    # Specific case when smallest_count == largest_count: We want a medium value
+    if smallest_count == largest_count:
+        return (min_size + max_size) / 2.0
+    else:     
+        # Formula details: 
+        # http://blog.16codes.com/2007/12/how-to-create-tag-cloud-with-formula.html
+        return ( ((current_count-smallest_count) * (max_size-min_size)) / (largest_count
             -smallest_count) ) + min_size
 
 def calculate_log(current_count, smallest_count, largest_count, max_size, min_size):

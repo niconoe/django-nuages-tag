@@ -158,6 +158,7 @@ class TemplateTagsTestCase(unittest.TestCase):
         self.assertAlmostEqual(self.TEST_DATA_DICT_NEG[2]['font-size'], 0) # PHP
     
     # Regression test: when min value == max value in Lin mode, there was a ZeroDivisionError
+    # Here we check for correct value, will be stopped by exception if it occurs again
     def test_with_min_eq_max_lin(self):
         t = Template('{% load django_nuages_tag %}'
                          '{% compute_tag_cloud my_test_data interest font-size 10 100 lin %}')             
@@ -165,8 +166,10 @@ class TemplateTagsTestCase(unittest.TestCase):
         c = Context({'my_test_data': self.TEST_DATA_MIN_EQ_MAX})
         t.render(c)
 
-        # Ensure they have the same result
-        self.assertEqual(self.TEST_DATA_DICT_NEG[0]['font-size'], self.TEST_DATA_DICT_NEG[1])    
+        # Ensure they have the same size...
+        self.assertEqual(self.TEST_DATA_MIN_EQ_MAX[0]['font-size'], self.TEST_DATA_MIN_EQ_MAX[1]['font-size'])
+        # ...And that this size is in the middle of the range
+        self.assertAlmostEqual(self.TEST_DATA_MIN_EQ_MAX[0]['font-size'], 55.0)    
         
     
     # TODO: test that the bounds (10-100) are taken into account... hmm only for lin ? is it normal ?
