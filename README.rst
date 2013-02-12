@@ -42,6 +42,7 @@ QuerySet**.
 We can now do:
 
 ::
+
     {% load django_nuages_tag %}
     
     {% compute_tag_cloud my_favourite_tools interest font_size 10 100 lin %}
@@ -84,6 +85,7 @@ Notes
    opacity (between 0.7 and 1) of the text with something like:
 
    ::
+        
        {% load django_nuages_tag %}
 
        {% compute_tag_cloud my_favourite_tools interest font_size 10 55 lin %}
