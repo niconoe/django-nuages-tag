@@ -27,7 +27,10 @@ class TemplateTagsTestCase(unittest.TestCase):
         
         self.TEST_DATA_DICT_NEG = [{'name': 'Python', 'interest': 30},
                                     {'name': 'Django', 'interest': 70},
-                                    {'name': 'PHP', 'interest': -1.5}]                                              
+                                    {'name': 'PHP', 'interest': -1.5}]
+
+        self.TEST_DATA_MIN_EQ_MAX = [{'name': 'Python', 'interest': 70},
+                                    {'name': 'Django', 'interest': 70}]                                                                          
         
         # Create a few Articles (another datasource)
         Article.objects.all().delete()
@@ -153,6 +156,17 @@ class TemplateTagsTestCase(unittest.TestCase):
         t.render(c)
 
         self.assertAlmostEqual(self.TEST_DATA_DICT_NEG[2]['font-size'], 0) # PHP
+    
+    # Regression test: when min value == max value in Lin mode, there was a ZeroDivisionError
+    def test_with_min_eq_max_lin(self):
+        t = Template('{% load django_nuages_tag %}'
+                         '{% compute_tag_cloud my_test_data interest font-size 10 100 lin %}')             
+
+        c = Context({'my_test_data': self.TEST_DATA_MIN_EQ_MAX})
+        t.render(c)
+
+        # Ensure they have the same result
+        self.assertEqual(self.TEST_DATA_DICT_NEG[0]['font-size'], self.TEST_DATA_DICT_NEG[1])    
         
     
     # TODO: test that the bounds (10-100) are taken into account... hmm only for lin ? is it normal ?
